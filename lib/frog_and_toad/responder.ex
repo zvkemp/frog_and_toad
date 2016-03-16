@@ -1,13 +1,17 @@
 defmodule FrogAndToad.Responder do
   import Slack.Bot, only: [say: 3]
   def respond(name, %{ "text" => t, "channel" => c } = msg, %{ id: uid, ribbit_msg: r, keywords: k } = config) do
-    cond do
-      contains_username?(t, [name, "<@#{uid}>"]) ->
-        parse_command(t, name, msg, config)
-        || say(name, r, c)
-      contains_keyword?(t, k) ->
-        try_keyword_response(name, msg, config)
-      true -> nil
+    try do
+      cond do
+        contains_username?(t, [name, "<@#{uid}>"]) ->
+          parse_command(t, name, msg, config)
+          || say(name, r, c)
+        contains_keyword?(t, k) ->
+          try_keyword_response(name, msg, config)
+        true -> nil
+      end
+    rescue
+      e -> say(name, "I do not feel well.", c)
     end
   end
 
@@ -37,9 +41,10 @@ defmodule FrogAndToad.Responder do
       [other_bot, "to", command] ->
         cond do
           Process.whereis(:"#{other_bot}:supervisor") ->
-            say(bot, "_whispers to #{other_bot}_", c)
+            say(bot, "_[whispers to #{other_bot}]_", c)
             parse_command("#{other_bot} #{command}", other_bot, msg, config)
-          true -> nil
+          true ->
+            say(bot, "No! I am afraid of talking to #{other_bot}.", c)
         end
       _ -> nil
     end
