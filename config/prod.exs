@@ -74,12 +74,19 @@ config :slack,
        token:   "token-1",
        ribbit_msg: "ribbit",
        responder: FrogAndToad.Responder,
-       keywords: %{ "cricket" => "WHERE ARE CRICKETS?" }
+       keywords: %{
+         "cricket" => "WHERE ARE CRICKETS?"
+       }
      },
     %{ name:    "toadbot",
        token:   "token-2",
        ribbit_msg: "croak",
        responder: FrogAndToad.Responder,
-       keywords: %{ "fly" => "mmm flies", "flies" => "Nothing like a tasty fly! Sure beats crickets." }
+       keywords: %{
+         "fly" => "mmm flies",
+         "flies" => "Nothing like a tasty fly! Sure beats crickets.",
+         "green" => "frogbot, you are looking quite green.",
+         "DAMMIT ASHLEY" => "Oh drat, Ashley."
+       }
      }
   ]
