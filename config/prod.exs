@@ -73,11 +73,13 @@ config :slack,
     %{ name:    "frogbot",
        token:   "token-1",
        ribbit_msg: "ribbit",
-       responder: Slack.Bot.Responders.Default
+       responder: FrogAndToad.Responder,
+       keywords: %{ "cricket" => "WHERE ARE CRICKETS?" }
      },
     %{ name:    "toadbot",
        token:   "token-2",
        ribbit_msg: "croak",
-       responder: Slack.Bot.Responders.Default
+       responder: FrogAndToad.Responder,
+       keywords: %{ "fly" => "mmm flies", "flies" => "Nothing like a tasty fly! Sure beats crickets." }
      }
   ]
