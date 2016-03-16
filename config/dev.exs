@@ -22,17 +22,17 @@ config :logger, :console, format: "[$level] $message\n"
 config :phoenix, :stacktrace_depth, 20
 
 config :slack,
-  #default_channel: "channel",
   default_channel: "channel",
+  # default_channel: "channel",
   bots: [
     %{ name:    "frogbot",
-       # token:   "token-1",
        token:   "token-1",
+       # token:   "token-1",
        ribbit:  3000,
        ribbit_msg: "ribbit" },
     %{ name:    "toadbot",
-       # token:   "token-2",
        token:   "token-2",
+       # token:   "token-2",
        ribbit:  5000,
        ribbit_msg: "croak" }
   ]

@@ -2,10 +2,11 @@ defmodule FrogAndToad.Router do
   use FrogAndToad.Web, :router
 
   pipeline :api do
-    plug :accepts, ["json"]
+    plug :accepts, ["json", "html"]
   end
 
-  scope "/api", FrogAndToad do
+  scope "/", FrogAndToad do
     pipe_through :api
+    get "/", ApiController, :index
   end
 end
