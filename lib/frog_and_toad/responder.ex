@@ -3,7 +3,7 @@ defmodule FrogAndToad.Responder do
   def respond(name, %{ "text" => t, "channel" => c } = msg, %{ id: uid, ribbit_msg: r, keywords: k } = config) do
     cond do
       contains_username?(t, [name, "<@#{uid}>"]) ->
-        parse_command(t, name, msg, config) |> IO.inspect
+        parse_command(t, name, msg, config)
         || say(name, r, c)
       contains_keyword?(t, k) ->
         try_keyword_response(name, msg, config)
@@ -29,6 +29,19 @@ defmodule FrogAndToad.Responder do
       Regex.scan(~r/echo/, t) |> Enum.count > 3 ->
         say(bot, "Drat these echos!", c)
       true -> say(bot, t, c)
+    end
+  end
+
+  defp parse_command("tell " <> t, name, %{ "channel" => c } = msg, %{ id: uid } = config, { bot }) do
+    case String.split(t, ~r/\s/, parts: 3) do
+      [other_bot, "to", command] ->
+        cond do
+          Process.whereis(:"#{other_bot}:supervisor") ->
+            say(bot, "_whispers to #{other_bot}_", c)
+            parse_command("#{other_bot} #{command}", other_bot, msg, config)
+          true -> nil
+        end
+      _ -> nil
     end
   end
 
