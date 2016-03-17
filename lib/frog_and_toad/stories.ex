@@ -2,7 +2,7 @@ defmodule FrogAndToad.Stories do
   import FrogAndToad.Responder, only: [narrate: 1]
 
   def story do
-    name = [:casablanca, :housework] |> Enum.take_random(1) |> Enum.at(0)
+    name = [:potter, :empire, :gone_with_the_wind, :housework] |> Enum.take_random(1) |> Enum.at(0)
     story(name)
   end
 
@@ -11,7 +11,7 @@ defmodule FrogAndToad.Stories do
   end
 
 
-  def casablanca do
+  def gone_with_the_wind do
     [
       [:frogbot, " Oh, toadbot, toadbot please don't say that. I'm so sorry, I'm so sorry for everything. "],
       [:toadbot, " My darling, you're such a child. You think that by saying, I'm sorry, all the past can be corrected. Here, take my handkerchief. Never, at any crisis of your life, have I known you to have a handkerchief. "],
@@ -79,4 +79,74 @@ defmodule FrogAndToad.Stories do
       [:toadbot, narrate "pulls the covers over his head and falls asleep"]
     ]
   end
+
+  def empire do
+    [
+      [toadbot: "You are beaten. It is useless to resist."],
+      [toadbot: "Don't let yourself be destroyed as salamanderbot did."],
+      [frogbot: narrate("thrusts sword at toadbot")],
+      [toadbot: narrate("slices off frogbot's sword hand")],
+      [frogbot: "Hey! That will take days to grow back."],
+      [toadbot: "There is no escape. Don't make me destroy you."],
+      [toadbot: "You do not yet realize your importance. You have only begun to discover you power."],
+      [toadbot: "Join me and I will complete your training."],
+      [toadbot: "With our combined strength, we can end this destructive conflict and bring order to the pond."],
+      [frogbot: "I'll never join you!"],
+      [toadbot: "If you only knew the power of the dark side."],
+      [toadbot: "salamanderbot never told you what happened to your father."],
+      [frogbot: "He told me enough! He told me _you_ killed him."],
+      [toadbot: "No."],
+      [toadbot: "*I*"],
+      [toadbot: "*am*"],
+      [toadbot: "*your*"],
+      [toadbot: "*father.*"],
+      [frogbot: narrate("is shocked")],
+      [frogbot: "No."],
+      [frogbot: "No. That's not true!"],
+      [frogbot: "*That's impossible!*"],
+      [toadbot: "Search your feelings. You know it to be true."],
+      [frogbot: "No! No! _*NoOoooOoooOOOOoooo*_!"],
+      [toadbot: "frogbot: You can destroy the Emperor. He has foreseen this."],
+      [toadbot: "It is your destiny. Join me, and we can rule the pond as father and son."],
+      [toadbot: "Come with me. It's the only way."],
+      [frogbot: narrate("hops away")]
+    ]
+  end
+
+  def potter do
+    [
+      [:frogbot, "I am."],
+      [:frogbot, "I'm frogbot."],
+      [:toadbot, "Oh, well, of course you are!"],
+      [:toadbot, "Got something for ya."],
+      [:toadbot, "'Fraid I might have sat on it at some point!"],
+      [:toadbot, "I imagine that it'll taste fine just the same."],
+      [:toadbot, "Ahh. Baked it myself."],
+      [:toadbot, narrate("hands frogbot the cake")],
+      [:toadbot, "Words and all. Heh."],
+      [:frogbot, "Thank you!"],
+      [:frogbot, narrate("Opens cake, which reads 'Happee Birdae frogbot.'")],
+      [:toadbot, "It's not every day that your young man turns eleven, now is it?"],
+      [:toadbot, narrate("sits down on the couch")],
+      [:toadbot, narrate("takes out an umbrella and points it at the empty fire. Poof, poof! Two sparks fly out and the fire starts. The channel gapes.")],
+      [:frogbot, narrate("puts cake down")],
+      [:frogbot, "Excuse me, who are you?"],
+      [:toadbot, "Rubeus toadbot. Keeper of keys and grounds at Lumos. Course, you'll know all about Lumos."],
+      [:frogbot, "Sorry, no."],
+      [:toadbot, "No? Blimey, frogbot, didn't you ever wonder where your mum and dad learned it all?"],
+      [:frogbot, "Learnt what?"],
+      [:toadbot, "You're a wizard, frogbot."],
+      [:frogbot, "I-I'm a what?"],
+      [:toadbot, "A wizard. And a thumping good one at that, I'd wager."],
+      [:toadbot, "Once you train up a little."],
+      [:frogbot, "No, you've made a mistake."],
+      [:frogbot, "I can't be...a-a wizard."],
+      [:frogbot, "I mean, I'm just..."],
+      [:frogbot, "frogbot. Just frogbot."],
+      [:toadbot, "Well, 'Just frogbot', did you ever make anything happen? Anything you couldn't explain when you were angry or scared?"],
+      [:frogbot, narrate("softens his expression")],
+      [:toadbot, "Ah."]
+    ]
+  end
+
 end
