@@ -35,5 +35,12 @@ config :slack,
        ribbit_msg: "croak",
        responder: FrogAndToad.Responder,
        keywords: %{ "fly" => "mmm flies", "flies" => "Nothing like a tasty fly! Sure beats crickets." }
+     },
+    %{ name:    "owlbot",
+       token:   "token-2",
+       ribbit_msg: "hoo",
+       responder: FrogAndToad.Owlbot,
+       keywords: %{},
+       watchers: %{}
      }
   ]

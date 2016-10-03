@@ -88,5 +88,12 @@ config :slack,
          "green" => "frogbot, you are looking quite green.",
          "DAMMIT ASHLEY" => "Oh drat, Ashley."
        }
-     }
+     },
+     %{ name: "owlbot",
+        token: "token-3",
+        ribbit_msg: "hoo",
+        responder: FrogAndToad.Owlbot,
+        keywords: %{},
+        watchers: %{}
+      }
   ]
