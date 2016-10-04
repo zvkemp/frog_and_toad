@@ -51,12 +51,15 @@ defmodule FrogAndToad.Owlbot do
 
   defp watchers(name, queue) do
     data = GenServer.call(:"#{name}:data", { :current })
-    Map.get(data, queue, MapSet.new)
+    w = Map.get(data, queue, MapSet.new)
+    Logger.info("queue #{queue} watchers #{w |> inspect}")
+    w
   end
 
   defp set_watcher(name, sender, queue) do
     current = watchers(name, queue)
     new_data = Map.put(%{}, queue, MapSet.put(current, sender))
+    Logger.info("set_watcher new_data #{new_data |> inspect }")
     GenServer.call(:"#{name}:data", { :update, new_data })
   end
 end
