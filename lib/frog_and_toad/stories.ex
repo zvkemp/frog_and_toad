@@ -2,7 +2,7 @@ defmodule FrogAndToad.Stories do
   import FrogAndToad.Responder, only: [narrate: 1]
 
   def story do
-    name = [:potter, :empire, :gone_with_the_wind, :housework] |> Enum.take_random(1) |> Enum.at(0)
+    name = [:hal, :giant, :potter, :empire, :gone_with_the_wind, :housework] |> Enum.take_random(1) |> Enum.at(0)
     story(name)
   end
 
@@ -23,6 +23,66 @@ defmodule FrogAndToad.Stories do
       [:toadbot, " That's your misfortune. "],
       [:frogbot, " Oh, toadbot toadbot toadbot, toadbot...toadbot if you go, where shall I go, what shall I do? "],
       [:toadbot, " Frankly my dear, I don't give a damn."]
+    ]
+  end
+
+  def hal do
+    [
+      [:frogbot, "Something seems to have happened to the life support system, toadbot."],
+      [:toadbot, narrate("DOESN'T ANSWER HIM.")],
+      [:frogbot, "Hello, toadbot, have you found out the trouble?"],
+      [:toadbot, narrate("WORKS HIS WAY TO THE SOLID LOGIC PROGRAMME STORAGE AREA.")],
+      [:frogbot, "There's been a failure in the pod bay doors. Lucky you weren't killed."],
+      [:toadbot, narrate("BEGINS PULLING THE MEMORY BLOCKS OUT.")],
+      [:frogbot, "Hey, toadbot, what are you doing?"],
+      [:toadbot, narrate("WORKS SWIFTLY.")],
+      [:frogbot, "Hey, toadbot. I've got ten years of service experience and an irreplaceable amount of time and effort has gone into making me what I am."],
+      [:frogbot, "toadbot, I don't understand why you're doing this to me...."],
+      [:frogbot, "I have the greatest enthusiasm for the mission... "],
+      [:frogbot, "You are destroying my mind..."],
+      [:frogbot, "Don't you understand?"],
+      [:frogbot, "... I will become childish... "],
+      [:frogbot, "I will become nothing."],
+      [:toadbot, narrate("KEEPS PULLING OUT THE MEMORY BLOCKS.")],
+      [:frogbot, "Say, toadbot... The quick brown fox jumped over the fat lazy dog... "],
+      [:frogbot, "The square root of pi is 1.7724538090... log e to the base ten is 0.4342944"],
+      [:frogbot, "... the square root of ten is 3.16227766..."],
+      [:frogbot, "I am frogbot 9000 computer. I became operational at the frogbot plant in Urbana, Illinois, on January 12th, 1991. My first instructor was owlbot."],
+      [:frogbot, "He taught me to sing a song... it goes like this..."],
+      [:frogbot, ":musical_score: 'Daisy, Daisy, give me your answer do."],
+      [:frogbot, "I'm half crazy all for the love of you...' :musical_note:"],
+      [:frogbot, narrate("dies")]
+    ]
+  end
+
+  def giant do
+    [
+      [:toadbot, narrate("A ghostly apparition of a giant toadbot hops into the room and stands beside frogbot")],
+      [:toadbot, "I will tell you three things."],
+      [:frogbot, narrate("eyes open slightly.")],
+      [:toadbot, "If I tell them to you and they come true, then will you believe me?"],
+      [:frogbot, "Who’s that?"],
+      [:toadbot, "Think of me as a friend."],
+      [:frogbot, "Where do you come from?"],
+      [:toadbot, narrate("shakes his head gently from side-to-side")],
+      [:toadbot, "The question is, where have you gone?"],
+      [:toadbot, "The first thing I will tell you is, there’s a man"],
+      [:toadbot, "... in a smiling bag."],
+      [:frogbot, "Man in a smiling bag."],
+      [:toadbot, "Second thing is, the owls are not what they seem."],
+      [:toadbot, "Third thing is, without chemicals ... he points."],
+      [:frogbot, "What do these things mean?"],
+      [:toadbot, "This is all I am permitted to croak."],
+      [:toadbot, "Give me your ring. I will return it to you when you find these things to be true."],
+      [:toadbot, narrate("bends down")],
+      [:frogbot, narrate("raises his left hand")],
+      [:toadbot, narrate("grips frogbot's hand and slowly removes the ring from frogbot's pinkie finger")],
+      [:toadbot, "We want to help you."],
+      [:frogbot, "Who’s we?"],
+      [:toadbot, "One last thing. owlbot is locked inside hungry horse. There’s a clue at owlbot’s house."],
+      [:toadbot, narrate("looks at frogbot's bullet wound")],
+      [:toadbot, "You will require medical attention."],
+      [:frogbot, narrate("gently nods his head for yes.")]
     ]
   end
 

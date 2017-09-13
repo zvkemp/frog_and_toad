@@ -43,6 +43,7 @@ defmodule FrogAndToad.Owlbot do
   defp notify_watchers(name, text, channel) do
     queue = queue_name(text)
     watchers(name, queue) |> Enum.each(fn (w) ->
+      Logger.info(w |> inspect)
       say(name, "HOOT <@#{w}> #{queue} is now free. HOOT", channel)
     end)
 

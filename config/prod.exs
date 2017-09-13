@@ -91,9 +91,11 @@ config :slack,
      },
      %{ name: "owlbot",
         token: "token-3",
-        ribbit_msg: "hoo",
-        responder: FrogAndToad.Owlbot,
-        keywords: %{},
-        watchers: %{}
+        ribbit_msg: "whom?",
+        responder: FrogAndToad.Responder,
+        keywords: %{
+          "owl" => "Well owl be damned",
+          "hoot" => "hoot hoot"
+        }
       }
   ]

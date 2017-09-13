@@ -37,10 +37,12 @@ config :slack,
        keywords: %{ "fly" => "mmm flies", "flies" => "Nothing like a tasty fly! Sure beats crickets." }
      },
     %{ name:    "owlbot",
-       token:   "token-2",
-       ribbit_msg: "hoo",
-       responder: FrogAndToad.Owlbot,
-       keywords: %{},
-       watchers: %{}
+       token:   "token-3",
+       ribbit_msg: "whom?",
+       responder: FrogAndToad.Responder,
+       keywords: %{
+         "owl" => "Well owl be damned",
+         "hoot" => "hoot hoot"
+       }
      }
   ]
