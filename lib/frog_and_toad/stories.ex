@@ -10,6 +10,16 @@ defmodule FrogAndToad.Stories do
     apply(__MODULE__, name, [])
   end
 
+  def owl_joke do
+    [
+      [:owlbot, "Knock knock"],
+      [:frogbot, "Who's there"],
+      [:owlbot, "To"],
+      [:frogbot, "To who?"],
+      [:owlbot, "It's 'to *whom*,' surely"],
+      [:toadbot, "oh my, what a hoot"]
+    ]
+  end
 
   def gone_with_the_wind do
     [

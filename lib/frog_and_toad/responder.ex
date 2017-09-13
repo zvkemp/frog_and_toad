@@ -59,6 +59,17 @@ defmodule FrogAndToad.Responder do
     end
   end
 
+  defp parse_command("tell a joke" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { "owlbot" = bot}) do
+    cond do
+      Process.whereis(:storytime) -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", c)
+      true ->
+        { :ok, pid } = Task.start(fn ->
+          FrogAndToad.Stories.owl_joke |> Enum.each(fn (line) -> storyline(line, c) end)
+        end)
+        Process.register(pid, :storytime)
+    end
+  end
+
   defp storyline([bot, str, sleep], channel) do
     say("#{bot}", str, channel)
     :timer.sleep(sleep)
