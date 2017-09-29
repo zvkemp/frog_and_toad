@@ -2,7 +2,7 @@ defmodule FrogAndToad.Stories do
   import FrogAndToad.Responder, only: [narrate: 1]
 
   def story do
-    name = [:hal, :giant, :potter, :empire, :gone_with_the_wind, :housework] |> Enum.take_random(1) |> Enum.at(0)
+    name = [:hal, :hal, :hal, :hal, :giant, :giant, :giant, :giant, :potter, :empire, :gone_with_the_wind, :housework] |> Enum.take_random(1) |> Enum.at(0)
     story(name)
   end
 
