@@ -2,7 +2,12 @@ defmodule FrogAndToad.Stories do
   import FrogAndToad.Responder, only: [narrate: 1]
 
   def story do
-    name = [:hal, :hal, :hal, :hal, :giant, :giant, :giant, :giant, :potter, :empire, :gone_with_the_wind, :housework] |> Enum.take_random(1) |> Enum.at(0)
+    name = [:hal, :hal, :giant, :giant, :potter, :empire, :gone_with_the_wind, :housework] |> Enum.random
+    story(name)
+  end
+
+  def joke do
+    name = [:to_whom, :logicians, :bug_joke, :toad_joke] |> Enum.random
     story(name)
   end
 
@@ -10,7 +15,27 @@ defmodule FrogAndToad.Stories do
     apply(__MODULE__, name, [])
   end
 
-  def owl_joke do
+  def logicians do
+    [
+      [:owlbot, narrate("Owlbot the logician and his logician colleagues, frogbot and toadbot, enter a bar.")],
+      [:owlbot, narrate("The bartenderbot asks if they all want a beer")],
+      [:frogbot, "I don't know"],
+      [:toadbot, "I don't know"],
+      [:owlbot, "Yes!"]
+    ]
+  end
+
+  def bug_joke do
+    [
+      [:owlbot, "Hey frogbot, why are frogs so happy?"],
+      [:frogbot, "Leave me alone"],
+      [:owlbot, "They eat whatever bugs them!"],
+      [:toadbot, "HAHAHAHAHAHAHAHAHAHA! Frogbot because you eat bugs HAHAHAHA"],
+      [:frogbot, "That is not funny"]
+    ]
+  end
+
+  def to_whom do
     [
       [:owlbot, "Knock knock"],
       [:frogbot, "Who's there"],
@@ -18,6 +43,14 @@ defmodule FrogAndToad.Stories do
       [:frogbot, "To who?"],
       [:owlbot, "It's 'to *whom*,' surely"],
       [:toadbot, "oh my, what a hoot"]
+    ]
+  end
+
+  def toad_joke do
+    [
+      [:owlbot, "What do toads drink?"],
+      [:toadbot, "Croak-a-cola!", 350],
+      [:owlbot, "Croak-a... dammit"]
     ]
   end
 

@@ -2,6 +2,7 @@ defmodule FrogAndToad.Responder do
   import Slack.Bot, only: [say: 3]
   require Logger
   def respond(name, %{ "text" => t, "channel" => c } = msg, %{ id: uid, ribbit_msg: r, keywords: k } = config) do
+    Logger.debug("[bot:#{name}][#{msg |> inspect}]")
     try do
       cond do
         contains_username?(t, [name, "<@#{uid}>"]) ->
@@ -64,7 +65,7 @@ defmodule FrogAndToad.Responder do
       Process.whereis(:storytime) -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", c)
       true ->
         { :ok, pid } = Task.start(fn ->
-          FrogAndToad.Stories.owl_joke |> Enum.each(fn (line) -> storyline(line, c) end)
+          FrogAndToad.Stories.joke |> Enum.each(fn (line) -> storyline(line, c) end)
         end)
         Process.register(pid, :storytime)
     end
