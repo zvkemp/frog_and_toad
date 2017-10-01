@@ -7,12 +7,24 @@ defmodule FrogAndToad.Stories do
   end
 
   def joke do
-    name = [:to_whom, :logicians, :bug_joke, :toad_joke] |> Enum.random
+    name = [:to_whom, :logicians, :bug_joke, :toad_joke, :interrupting_owl] |> Enum.random
     story(name)
   end
 
   def story(name) do
     apply(__MODULE__, name, [])
+  end
+
+  def interrupting_owl do
+    [
+      [:owlbot, "Knock knock!"],
+      [:frogbot, "Who's there?"],
+      [:owlbot, "Interrupting owl"],
+      [:frogbot, "Interru...", 350],
+      [:owlbot, "*WHOOOOOOOOOO*"],
+      [:toadbot, "Hey has anyone seen my...", 350],
+      [:owlbot, "_*WHOOOOOOOOOOOOOO000000000o0o0o0000oooOOO*_"],
+    ]
   end
 
   def logicians do

@@ -28,9 +28,10 @@ defmodule FrogAndToad.Mixfile do
   #
   # Type `mix help deps` for examples and options.
   defp deps do
-    [{:phoenix, "~> 1.1.4"},
+    [{:phoenix, "~> 1.3"},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:slack, github: "zvkemp/elixir-bot-server" }]
+     #{:slack, github: "zvkemp/elixir-bot-server" }]
+     {:slack, path: "/Users/zach/workspace/elixir/elixir-bot-server"}]
   end
 end
