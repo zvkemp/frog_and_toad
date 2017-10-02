@@ -14,7 +14,7 @@ config :frog_and_toad, FrogAndToad.Endpoint,
   watchers: []
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n", level: :debug
+config :logger, :console, format: "[$level] $message\n", level: :info
 
 # Set a higher stacktrace during development.
 # Do not configure such in production as keeping
@@ -30,16 +30,16 @@ config :slack,
       ribbit_msg: "ribbit",
       responder: FrogAndToad.Responder,
       keywords: %{ "cricket" => "WHERE ARE CRICKETS?" },
-      socket_client: Slack.Console.Socket,
-      api_client: Slack.Console.APIClient,
+      # socket_client: Slack.Console.Socket,
+      # api_client: Slack.Console.APIClient,
     },
     %{name:    "toadbot",
       token:   "token-2",
       ribbit_msg: "croak",
       responder: FrogAndToad.Responder,
       keywords: %{ "fly" => "mmm flies", "flies" => "Nothing like a tasty fly! Sure beats crickets." },
-      socket_client: Slack.Console.Socket,
-      api_client: Slack.Console.APIClient,
+      # socket_client: Slack.Console.Socket,
+      # api_client: Slack.Console.APIClient,
     },
     %{name:    "owlbot",
       token:   "token-3",
@@ -49,7 +49,7 @@ config :slack,
         "owl" => "Well owl be damned",
         "hoot" => "hoot hoot"
       },
-      socket_client: Slack.Console.Socket,
-      api_client: Slack.Console.APIClient
+      # socket_client: Slack.Console.Socket,
+      # api_client: Slack.Console.APIClient
     }
   ]

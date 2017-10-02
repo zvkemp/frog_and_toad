@@ -69,33 +69,4 @@ config :logger, level: :info
 
 config :slack,
   default_channel: "channel",
-  bots: [
-    %{ name:    "frogbot",
-       token:   "token-1",
-       ribbit_msg: "ribbit",
-       responder: FrogAndToad.Responder,
-       keywords: %{
-         "cricket" => "WHERE ARE CRICKETS?"
-       }
-     },
-    %{ name:    "toadbot",
-       token:   "token-2",
-       ribbit_msg: "croak",
-       responder: FrogAndToad.Responder,
-       keywords: %{
-         "fly" => "mmm flies",
-         "flies" => "Nothing like a tasty fly! Sure beats crickets.",
-         "green" => "frogbot, you are looking quite green.",
-         "DAMMIT ASHLEY" => "Oh drat, Ashley."
-       }
-     },
-     %{ name: "owlbot",
-        token: "token-3",
-        ribbit_msg: "whom?",
-        responder: FrogAndToad.Responder,
-        keywords: %{
-          "owl" => "Well owl be damned",
-          "hoot" => "hoot hoot"
-        }
-      }
-  ]
+  bots: System.get_env("BOT_CONFIGS") |> FrogAndToad.ConfigHelper.load_from_env
