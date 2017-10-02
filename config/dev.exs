@@ -21,35 +21,6 @@ config :logger, :console, format: "[$level] $message\n", level: :info
 # and calculating stacktraces is usually expensive.
 config :phoenix, :stacktrace_depth, 20
 
-config :slack,
-  use_console: true,
-  default_channel: "channel",
-  bots: [
-    %{name:    "frogbot",
-      token:   "token-1",
-      ribbit_msg: "ribbit",
-      responder: FrogAndToad.Responder,
-      keywords: %{ "cricket" => "WHERE ARE CRICKETS?" },
-      # socket_client: Slack.Console.Socket,
-      # api_client: Slack.Console.APIClient,
-    },
-    %{name:    "toadbot",
-      token:   "token-2",
-      ribbit_msg: "croak",
-      responder: FrogAndToad.Responder,
-      keywords: %{ "fly" => "mmm flies", "flies" => "Nothing like a tasty fly! Sure beats crickets." },
-      # socket_client: Slack.Console.Socket,
-      # api_client: Slack.Console.APIClient,
-    },
-    %{name:    "owlbot",
-      token:   "token-3",
-      ribbit_msg: "whom?",
-      responder: FrogAndToad.Responder,
-      keywords: %{
-        "owl" => "Well owl be damned",
-        "hoot" => "hoot hoot"
-      },
-      # socket_client: Slack.Console.Socket,
-      # api_client: Slack.Console.APIClient
-    }
-  ]
+if File.exists?("config/dev.local.exs") do
+  import_config "dev.local.exs"
+end

@@ -19,6 +19,20 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+defmodule FrogAndToad.ConfigHelper do
+  # Store production bot configs in a single BOT_CONFIGS env var (for heroku, et al)
+  def dump_to_env(bot_conf) do
+    bot_conf
+    |> :erlang.term_to_binary
+    |> Base.encode64
+  end
+
+  def load_from_env(str) do
+    str
+    |> Base.decode64!
+    |> :erlang.binary_to_term
+  end
+end
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
 import_config "#{Mix.env}.exs"
