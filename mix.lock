@@ -1,0 +1,11 @@
+%{"cowboy": {:hex, :cowboy, "1.0.4"},
+  "cowlib": {:hex, :cowlib, "1.0.2"},
+  "gettext": {:hex, :gettext, "0.10.0"},
+  "httpotion": {:hex, :httpotion, "2.2.2"},
+  "ibrowse": {:hex, :ibrowse, "4.2.2"},
+  "phoenix": {:hex, :phoenix, "1.1.4"},
+  "plug": {:hex, :plug, "1.1.2"},
+  "poison": {:hex, :poison, "2.1.0"},
+  "ranch": {:hex, :ranch, "1.2.1"},
+  "slack": {:git, "https://github.com/zvkemp/elixir-bot-server.git", "2b4b855de401eebc1890734fe2f66894adf290d2", []},
+  "socket": {:git, "https://github.com/zvkemp/elixir-socket.git", "fd7d726bc91164837b7ed06421b21322da07c8e8", []}}
