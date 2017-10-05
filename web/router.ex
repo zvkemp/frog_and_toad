@@ -8,5 +8,6 @@ defmodule FrogAndToad.Router do
   scope "/", FrogAndToad do
     pipe_through :api
     get "/", ApiController, :index
+    post "/say", ApiController, :create
   end
 end
