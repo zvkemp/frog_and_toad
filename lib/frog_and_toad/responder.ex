@@ -6,7 +6,7 @@ defmodule FrogAndToad.Responder do
     try do
       cond do
         contains_username?(t, [name, "<@#{uid}>"]) ->
-          parse_command(t, name, msg, config) || say(name, config.ribbit_msg, config)
+          parse_command(t, name, msg, config) || say(name, config.ribbit_msg, c)
         contains_keyword?(t, k) ->
           try_keyword_response(name, msg, config)
         true -> nil
@@ -105,7 +105,10 @@ defmodule FrogAndToad.Responder do
     end
   end
 
-  defp parse_command(_, _, _, _, _), do: nil
+  defp parse_command(_, _, _, _, _) do
+    Logger.debug("parsing empty command")
+    nil
+  end
 
   defp try_command("echo" = cmd, name, %{ "text" => t, "user" => user, "channel" => c }, %{ id: uid, ribbit_msg: r }) do
     mention = "<@#{uid}>"
