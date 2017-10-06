@@ -1,17 +1,25 @@
 defmodule FrogAndToad.Stories do
+  alias FrogAndToad.Stories.Sample
   import FrogAndToad.Responder, only: [narrate: 1]
 
-  def story do
-    name = [:hal, :hal, :giant, :giant, :potter, :empire, :gone_with_the_wind, :housework] |> Enum.random
-    story(name)
+  @stories [:hal, :giant, :potter, :empire, :gone_with_the_wind, :housework]
+  @jokes [:to_whom, :logicians, :bug_joke, :toad_joke, :interrupting_owl]
+
+  def stories, do: @stories
+  def jokes, do: @jokes
+  require Logger
+
+  def story(channel) do
+    name = Sample.random(:stories, channel)
+    do_story(name)
   end
 
-  def joke do
-    name = [:to_whom, :logicians, :bug_joke, :toad_joke, :interrupting_owl] |> Enum.random
-    story(name)
+  def joke(channel) do
+    name = Sample.random(:jokes, channel)
+    do_story(name)
   end
 
-  def story(name) do
+  def do_story(name) do
     apply(__MODULE__, name, [])
   end
 

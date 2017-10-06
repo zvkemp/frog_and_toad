@@ -53,7 +53,7 @@ defmodule FrogAndToad.Responder do
       Process.whereis(:storytime) -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", c)
       true ->
         { :ok, pid } = Task.start(fn ->
-          FrogAndToad.Stories.story |> Enum.each(fn (line) -> storyline(line, c) end)
+          FrogAndToad.Stories.story(c) |> Enum.each(fn (line) -> storyline(line, c) end)
         end)
         Process.register(pid, :storytime)
     end
@@ -64,7 +64,7 @@ defmodule FrogAndToad.Responder do
       Process.whereis(:storytime) -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", c)
       true ->
         { :ok, pid } = Task.start(fn ->
-          FrogAndToad.Stories.joke |> Enum.each(fn (line) -> storyline(line, c) end)
+          FrogAndToad.Stories.joke(c) |> Enum.each(fn (line) -> storyline(line, c) end)
         end)
         Process.register(pid, :storytime)
     end
