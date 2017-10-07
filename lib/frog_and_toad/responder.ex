@@ -38,36 +38,56 @@ defmodule FrogAndToad.Responder do
   end
 
   defp parse_command("I am bored" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { bot }) do
-    pid = Process.whereis(:storytime)
-    cond do
-      pid ->
-        Process.exit(pid, :shutdown)
-        say(bot, "Drat this ungrateful audience. Come back later for a different story!", c)
-      # TODO: put in actual bot names here
-      true -> say(bot, "Why don't you try talking to #{Enum.shuffle(["gashley", "bobabot", "doobot"]) |> List.first} for a while", c)
+    if pid = channel_has_story?(c) do
+      Process.exit(pid, :shutdown)
+      say(bot, "Drat this ungrateful audience. Come back later for a different story!", c)
+    else
+      say(bot, "Why don't you try talking to someone else for a while", c)
     end
   end
 
   defp parse_command("storytime!" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { bot }) do
-    cond do
-      Process.whereis(:storytime) -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", c)
-      true ->
-        { :ok, pid } = Task.start(fn ->
-          FrogAndToad.Stories.story(c) |> Enum.each(fn (line) -> storyline(line, c) end)
-        end)
-        Process.register(pid, :storytime)
-    end
+    storytime(c, :story, bot, user)
   end
 
   defp parse_command("tell a joke" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { "owlbot" = bot}) do
-    cond do
-      Process.whereis(:storytime) -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", c)
-      true ->
-        { :ok, pid } = Task.start(fn ->
-          FrogAndToad.Stories.joke(c) |> Enum.each(fn (line) -> storyline(line, c) end)
-        end)
-        Process.register(pid, :storytime)
+    storytime(c, :joke, bot, user)
+  end
+
+  @spec storytime(binary, :joke | :story, binary, binary) :: :ok
+  defp storytime(channel, story_type, bot, user) do
+    case start_monitored_story(channel, story_type) do
+      {:ok, _} -> :ok
+      {:error, :already_started} -> say(bot, "<@#{user}> _*SHHHH!*_ We are already telling you a story.", channel)
     end
+  end
+
+  @spec start_monitored_story(binary, :joke | :story) :: {:ok, pid} | {:error, :already_started} | {:error}
+  defp start_monitored_story(channel, story_type) do
+    if channel_has_story?(channel) do
+      {:error, :already_started}
+    else
+      {:ok, pid} = Task.start(fn ->
+        FrogAndToad.Stories
+        |> apply(story_type, [channel])
+        |> Enum.each(fn (line) -> storyline(line, channel) end)
+      end)
+
+      Registry.register(Slack.BotRegistry, {:storytime, channel}, pid)
+
+      spawn fn ->
+        Process.monitor(pid)
+        receive do
+          {:DOWN, _, _, ^pid} -> Registry.unregister(Slack.BotRegistry, {:storytime, channel})
+        end
+      end
+
+      {:ok, pid}
+    end
+  end
+
+  defp channel_has_story?(channel) do
+    Slack.BotRegistry.lookup({:storytime, channel})
   end
 
   defp storyline([bot, str, sleep], channel) do
@@ -95,7 +115,7 @@ defmodule FrogAndToad.Responder do
     case String.split(t, ~r/\s/, parts: 3) do
       [other_bot, "to", command] ->
         cond do
-          Process.whereis(:"#{other_bot}:supervisor") ->
+          Slack.BotRegistry.lookup({other_bot, Slack.Bot.Supervisor}) ->
             say(bot, narrate("whispers to #{other_bot}"), c)
             parse_command("#{other_bot} #{command}", other_bot, msg, config)
           true ->

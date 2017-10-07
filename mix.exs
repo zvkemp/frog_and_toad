@@ -31,10 +31,10 @@ defmodule FrogAndToad.Mixfile do
     [{:phoenix, "~> 1.3"},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:slack, github: "zvkemp/elixir-bot-server", ref: "c589b77a7a60d2732c628a76dc453f1242866a0b" },
-     # {:slack, path: "../elixir-bot-server"},
-
+     {:slack, github: "zvkemp/elixir-bot-server", ref: "d44f9ab50e3648996291bb1bfd0639a55ad2d937"},
+     #{:slack, path: "../elixir-bot-server"},
      {:credo, "~> 0.8", only: [:dev]},
+     {:mix_test_watch, "~> 0.2", only: :dev},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}]
   end
 end
