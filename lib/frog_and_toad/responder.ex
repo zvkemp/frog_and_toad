@@ -1,17 +1,17 @@
 defmodule FrogAndToad.Responder do
   import Slack.Bot, only: [say: 3]
+  alias Slack.Bot.Config, as: C
+
   require Logger
-  def respond(name, %{"text" => t, "channel" => c} = msg, %{id: uid, ribbit_msg: r, keywords: k} = config) do
-    # Logger.debug("[bot:#{name}][#{msg |> inspect}]")
+  def respond(name, %{"text" => t, "channel" => c} = msg, %C{id: uid, keywords: k} = config) do
     try do
       cond do
-        contains_username?(t, [name, "<@#{uid}>"]) ->
-          parse_command(t, name, msg, config) || say(name, config.ribbit_msg, c)
+        String.contains?(t, [name, "<@#{uid}>"]) ->
+          handle_mention(t, name, msg, config)
         contains_keyword?(t, k) ->
           try_keyword_response(name, msg, config)
         true -> nil
       end
-      # end
     rescue
       e ->
         say(name, "_I do not feel well._ `#{e |> inspect}`", c)
@@ -24,20 +24,37 @@ defmodule FrogAndToad.Responder do
     nil
   end
 
-  defp parse_command(t, name, msg, %{ id: uid } = config) do
-    mention = "<@#{uid}>"
-    cond do
-      String.starts_with?(t, name)    -> parse_command(String.split(t, name, parts: 2)    |> Enum.at(1) |> String.strip, name, msg, config, { name })
-      String.starts_with?(t, mention) -> parse_command(String.split(t, mention, parts: 2) |> Enum.at(1) |> String.strip, name, msg, config, { name })
-      true                            -> nil
+  # Detect if the string starts with the bot's name or @-mention
+  defp handle_mention(text, name, msg, %{id: uid} = config) do
+    mentions = ["<@#{uid}>", name]
+    if String.starts_with?(text, mentions) do
+      parse_command(
+        text
+        |> String.split(mentions, parts: 2)
+        |> Enum.at(1)
+        |> String.trim, name, msg, config, {name}
+      )
+    else
+      say(name, config.ribbit_msg, msg["channel"])
     end
   end
 
-  defp parse_command("error" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { bot }) do
+  defp parse_command("error" <> t, _, _msg, _config, {_bot}) do
     raise t
   end
 
-  defp parse_command("I am bored" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { bot }) do
+  # start a story sequence
+  defp parse_command("storytime!" <> _t, _, %{"channel" => c, "user" => user}, _config, {bot}) do
+    storytime(c, :story, bot, user)
+  end
+
+  # start a joke sequence
+  defp parse_command("tell a joke" <> _t, _, %{"channel" => c, "user" => user}, _config, {"owlbot" = bot}) do
+    storytime(c, :joke, bot, user)
+  end
+
+  # stop a running story
+  defp parse_command("I am bored" <> _t, _, %{"channel" => c}, _config, {bot}) do
     if pid = channel_has_story?(c) do
       Process.exit(pid, :shutdown)
       say(bot, "Drat this ungrateful audience. Come back later for a different story!", c)
@@ -46,12 +63,31 @@ defmodule FrogAndToad.Responder do
     end
   end
 
-  defp parse_command("storytime!" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { bot }) do
-    storytime(c, :story, bot, user)
+  defp parse_command("echo " <> t, _, %{"channel" => c}, %{id: uid} = config, {bot}) do
+    if ~r/echo/ |> Regex.scan(t) |> Enum.count > 3 do
+      say(bot, "Drat these echos!", c)
+    else
+      say(bot, t, c)
+    end
   end
 
-  defp parse_command("tell a joke" <> t, _, %{ "channel" => c, "user" => user }, %{ id: uid } = config, { "owlbot" = bot}) do
-    storytime(c, :joke, bot, user)
+  # forward a command to another bot
+  defp parse_command("tell " <> t, _name, %{ "channel" => c } = msg, config, {bot}) do
+    case String.split(t, ~r/\s/, parts: 3) do
+      [other_bot, "to", command] ->
+        if Slack.BotRegistry.lookup({other_bot, Slack.Bot.Supervisor}) do
+          say(bot, narrate("whispers to #{other_bot}"), c)
+          handle_mention("#{other_bot} #{command}", other_bot, msg, config)
+        else
+          say(bot, "No! I am afraid of talking to #{other_bot}.", c)
+        end
+      _ -> nil
+    end
+  end
+
+  # default, user was mentioned but no command matched.
+  defp parse_command(_t, _, %{"channel" => c}, config, {bot}) do
+    say(bot, config.ribbit_msg, c)
   end
 
   @spec storytime(binary, :joke | :story, binary, binary) :: :ok
@@ -87,7 +123,10 @@ defmodule FrogAndToad.Responder do
   end
 
   defp channel_has_story?(channel) do
-    Slack.BotRegistry.lookup({:storytime, channel})
+    case Slack.BotRegistry.lookup({:storytime, channel}) do
+      {_, pid} -> pid
+      _ -> false
+    end
   end
 
   defp storyline([bot, str, sleep], channel) do
@@ -96,63 +135,32 @@ defmodule FrogAndToad.Responder do
   end
 
   defp storyline([bot, str], ch) do
-    storyline([bot, str, 2000], ch)
+    storyline([bot, str, default_storyline_sleep()], ch)
   end
 
-  defp parse_command("echo " <> t, _, %{ "channel" => c }, %{ id: uid } = config, { bot }) do
-    cond do
-      Regex.scan(~r/echo/, t) |> Enum.count > 3 ->
-        say(bot, "Drat these echos!", c)
-      true -> say(bot, t, c)
-    end
-  end
+  defp default_storyline_sleep, do: Application.get_env(:slack, :story_sleep, 2_000)
 
   def narrate(str) do
     "_[#{str}]_"
   end
 
-  defp parse_command("tell " <> t, name, %{ "channel" => c } = msg, %{ id: uid } = config, { bot }) do
-    case String.split(t, ~r/\s/, parts: 3) do
-      [other_bot, "to", command] ->
-        cond do
-          Slack.BotRegistry.lookup({other_bot, Slack.Bot.Supervisor}) ->
-            say(bot, narrate("whispers to #{other_bot}"), c)
-            parse_command("#{other_bot} #{command}", other_bot, msg, config)
-          true ->
-            say(bot, "No! I am afraid of talking to #{other_bot}.", c)
-        end
-      _ -> nil
-    end
-  end
 
-  defp parse_command(_, _, _, _, _) do
-    Logger.debug("parsing empty command")
-    nil
-  end
-
-  defp try_command("echo" = cmd, name, %{ "text" => t, "user" => user, "channel" => c }, %{ id: uid, ribbit_msg: r }) do
+  defp try_command("echo" = cmd, name, %{"text" => t, "user" => user, "channel" => c}, %{id: uid, ribbit_msg: r}) do
     mention = "<@#{uid}>"
-    cond do
-      String.starts_with?(t, "#{name} #{cmd} ") || String.starts_with?(t, "#{mention} #{cmd} ") ->
-        say(name, String.split(t, " #{cmd} ", parts: 2) |> Enum.at(1), c)
-      true -> nil
-    end
+    if String.starts_with?(t, "#{name} #{cmd} ") || String.starts_with?(t, "#{mention} #{cmd} "), do:
+    name |> say(t |> String.split(" #{cmd} ", parts: 2) |> Enum.at(1), c)
   end
 
   defp try_command(_, _, _, _), do: nil
 
-  defp contains_username?(msg, names) do
-    Enum.any?(names, &(String.contains?(msg, &1)))
-  end
-
   defp contains_keyword?(t, keywords) do
     dn = String.downcase(t)
-    Enum.any?(keywords, fn ({ word, _ }) -> String.contains?(dn, word) end)
+    String.contains?(dn, keywords |> Map.keys)
   end
 
-  defp try_keyword_response(name, %{ "text" => t, "user" => user, "channel" => c }, %{ keywords: k }) do
+  defp try_keyword_response(name, %{"text" => t, "user" => _user, "channel" => c}, %{keywords: k}) do
     dn = String.downcase(t)
-    { _, resp } = Enum.find(k, fn ({ word, _ }) -> String.contains?(dn, word) end)
+    {_, resp} = Enum.find(k, fn ({word, _}) -> String.contains?(dn, word) end)
     say(name, resp, c)
   end
 end

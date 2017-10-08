@@ -14,8 +14,7 @@ config :frog_and_toad, FrogAndToad.Endpoint,
   watchers: []
 
 # Do not include metadata nor timestamps in development logs
-config :logger, :console, format: "[$level] $message\n", level: :info
-
+config :logger, :console, format: "[$level] $message\n", level: :debug
 # Set a higher stacktrace during development.
 # Do not configure such in production as keeping
 # and calculating stacktraces is usually expensive.

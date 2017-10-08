@@ -15,5 +15,5 @@
   "poison": {:hex, :poison, "2.2.0", "4763b69a8a77bd77d26f477d196428b741261a761257ff1cf92753a0d4d24a63", [], [], "hexpm"},
   "queue": {:git, "https://github.com/zvkemp/ex-queues.git", "76423c8d39b4096f315686c84e9233498e55e851", []},
   "ranch": {:hex, :ranch, "1.3.2", "e4965a144dc9fbe70e5c077c65e73c57165416a901bd02ea899cfd95aa890986", [:rebar3], [], "hexpm"},
-  "slack": {:git, "https://github.com/zvkemp/elixir-bot-server.git", "d44f9ab50e3648996291bb1bfd0639a55ad2d937", [ref: "d44f9ab50e3648996291bb1bfd0639a55ad2d937"]},
+  "slack": {:git, "https://github.com/zvkemp/elixir-bot-server.git", "4f6ca8cb731967013029d4b54b65ee70c5d53471", [ref: "4f6ca8cb731967013029d4b54b65ee70c5d53471"]},
   "socket": {:hex, :socket, "0.3.12", "4a6543815136503fee67eff0932da1742fad83f84c49130c854114153cc549a6", [:mix], [], "hexpm"}}

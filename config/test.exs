@@ -7,4 +7,32 @@ config :frog_and_toad, FrogAndToad.Endpoint,
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :warn
+config :logger, level: :debug
+
+config :slack,
+  use_console: true,
+  print_to_console: true,
+  story_sleep: 100,
+  bots: [
+    %{name: "toadbot",
+      socket_client: Slack.Console.Socket,
+      api_client: Slack.Console.APIClient,
+      token: "toadbot-token",
+      ribbit_msg: "croak",
+      responder: FrogAndToad.Responder
+    },
+    %{name: "frogbot",
+      socket_client: Slack.Console.Socket,
+      api_client: Slack.Console.APIClient,
+      token: "frogbot-token",
+      ribbit_msg: "ribbit",
+      responder: FrogAndToad.Responder
+    },
+    %{name: "owlbot",
+      socket_client: Slack.Console.Socket,
+      api_client: Slack.Console.APIClient,
+      token: "owlbot-token",
+      ribbit_msg: "hoot",
+      responder: FrogAndToad.Responder
+    }
+  ]

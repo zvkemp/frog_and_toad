@@ -30,7 +30,7 @@ defmodule FrogAndToad.Stories do
       [:owlbot, "Interrupting owl"],
       [:frogbot, "Interru...", 350],
       [:owlbot, "*WHOOOOOOOOOO*"],
-      [:toadbot, "Hey has anyone seen my...", 350],
+      [:toadbot, "Hey has anyone seen my tadpole? He was swimming over in that dark area and I am concerned that...", 350],
       [:owlbot, "_*WHOOOOOOOOOOOOOO000000000o0o0o0000oooOOO*_"],
     ]
   end

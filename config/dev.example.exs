@@ -3,6 +3,7 @@ use Mix.Config
 # copy this to dev.local.exs (which is loaded in development, but ignored by git)
 config :slack,
   use_console: true,
+  print_to_console: true,
   default_channel: "CHANNEL_ID",
   bots: [
     %{name:    "frogbot",
