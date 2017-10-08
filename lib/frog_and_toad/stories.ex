@@ -172,10 +172,10 @@ defmodule FrogAndToad.Stories do
       [:toadbot, "_*Tomorrow!*_"],
       [:toadbot, "_*I will do it all tomorrow!*_"],
       [:toadbot, narrate "sits on the edge of his bed"],
-      [:toadbot, "Blah." ],
+      [:toadbot, "Blah."],
       [:toadbot, "I feel down in the dumps."],
       [:frogbot, "Why?"],
-      [:toadbot, "I am thinking about tomorrow." ],
+      [:toadbot, "I am thinking about tomorrow."],
       [:toadbot, "I am thinking about all of the many things that I will have to do."],
       [:frogbot, "Yes, tomorrow will be a very hard day for you."],
       [:toadbot, "But frogbot, if I pick up my pants and jacket right now, then I will not have to pick them up tomorrow, will I?"],
@@ -194,7 +194,7 @@ defmodule FrogAndToad.Stories do
       [:toadbot, "There. Now I feel better."],
       [:toadbot, "I am not in the dumps anymore."],
       [:frogbot, "Why?"],
-      [:toadbot, "Because I have done all that work." ],
+      [:toadbot, "Because I have done all that work."],
       [:toadbot, "Now I can save tomorrow for something that I really want to do."],
       [:frogbot, "What is that?"],
       [:toadbot, "Tomorrow, I can just take life easy."],
@@ -271,5 +271,4 @@ defmodule FrogAndToad.Stories do
       [:toadbot, "Ah."]
     ]
   end
-
 end

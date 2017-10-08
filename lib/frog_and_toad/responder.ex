@@ -53,6 +53,12 @@ defmodule FrogAndToad.Responder do
     storytime(c, :joke, bot, user)
   end
 
+  # start a joke sequence
+  defp parse_command("tell a joke" <> _t, _, %{"channel" => c}, _config, {bot}) do
+    say(bot, "No. But if you're looking for a hoot...", c)
+    say(bot, "owlbot tell a joke", c)
+  end
+
   # stop a running story
   defp parse_command("I am bored" <> _t, _, %{"channel" => c}, _config, {bot}) do
     if pid = channel_has_story?(c) do
@@ -112,9 +118,10 @@ defmodule FrogAndToad.Responder do
       Registry.register(Slack.BotRegistry, {:storytime, channel}, pid)
 
       spawn fn ->
-        Process.monitor(pid)
+        ref = Process.monitor(pid)
         receive do
-          {:DOWN, _, _, ^pid} -> Registry.unregister(Slack.BotRegistry, {:storytime, channel})
+          {:DOWN, ^ref, _, _, _} -> Registry.unregister(Slack.BotRegistry, {:storytime, channel})
+          msg -> Logger.warn(msg |> inspect)
         end
       end
 
@@ -124,7 +131,7 @@ defmodule FrogAndToad.Responder do
 
   defp channel_has_story?(channel) do
     case Slack.BotRegistry.lookup({:storytime, channel}) do
-      {_, pid} -> pid
+      {_, pid} -> if Process.alive?(pid), do: pid
       _ -> false
     end
   end
