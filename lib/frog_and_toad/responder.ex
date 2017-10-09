@@ -129,7 +129,7 @@ defmodule FrogAndToad.Responder do
     end
   end
 
-  defp channel_has_story?(channel) do
+  def channel_has_story?(channel) do
     case Slack.BotRegistry.lookup({:storytime, channel}) do
       {_, pid} -> if Process.alive?(pid), do: pid
       _ -> false
