@@ -10,6 +10,10 @@ defmodule FrogAndToad.Responder do
           handle_mention(t, name, msg, config)
         contains_keyword?(t, k) ->
           try_keyword_response(name, msg, config)
+        someone_telling_a_joke?(t) ->
+          wait_for_joke_response(name, msg, config)
+        someone_finishing_a_joke?(t) ->
+          cancel_pending_reminders(name, msg, config)
         true -> nil
       end
     rescue
@@ -22,6 +26,45 @@ defmodule FrogAndToad.Responder do
 
   def respond(_, _, _) do
     nil
+  end
+
+  defp someone_telling_a_joke?("Q:" <> _), do: true
+  defp someone_telling_a_joke?(_), do: false
+
+  # TODO: finish implementing this. Need to tie back to original username, and the timer process
+  # should be canceled when this comes in. Could probably do this all through the ResponseGate, using timer refs!
+  # woot
+  #
+  # - handle telling a new joke when the old one isn't finished (send reminder immediately)
+  defp someone_finishing_a_joke?("A:" <> _), do: true
+  defp someone_finishing_a_joke?(_), do: false
+
+  defp wait_for_joke_response(name, %{"text" => t, "channel" => c, "user" => u, "ts" => ts} = msg, _config) do
+    if FrogAndToad.ResponseGate.go?("response_gate", t, c, ts, u) do
+      rkey = reminder_key(u, c)
+
+      if !Process.whereis(rkey) do
+        "Q:" <> q = t
+
+        {:ok, pid} = Task.start fn ->
+          :timer.sleep(30_000 * 1)
+          say(name, "<@#{u}> We're still waiting for an answer! #{q}", c)
+        end
+
+        Process.register(pid, rkey)
+      end
+    end
+  end
+
+  defp reminder_key(user, channel) do
+    :"reminder:#{user}:#{channel}"
+  end
+
+  defp cancel_pending_reminders(name, %{"text" => t, "channel" => c, "user" => u, "ts" => ts} = msg, _config) do
+    if FrogAndToad.ResponseGate.go?("cancel_pending", t, c, ts, u) do
+      if pid = Process.whereis(reminder_key(u, c)), do: Process.exit(pid, :shutdown)
+      say(name, "HAHAHAHA! Good one", c)
+    end
   end
 
   # Detect if the string starts with the bot's name or @-mention
@@ -77,8 +120,16 @@ defmodule FrogAndToad.Responder do
     end
   end
 
+  defp parse_command("mention me in a minute" <> t, _, %{"user" => u, "channel" => c}, %{id: uid} = config, {bot}) do
+    say(bot, "sure thing boss", c)
+    Task.start(fn ->
+      :timer.sleep(10_000)
+      say(bot, "<@#{u}> has it been a minute yet?", c)
+    end)
+  end
+
   # forward a command to another bot
-  defp parse_command("tell " <> t, _name, %{ "channel" => c } = msg, config, {bot}) do
+  defp parse_command("tell " <> t, _name, %{"channel" => c} = msg, config, {bot}) do
     case String.split(t, ~r/\s/, parts: 3) do
       [other_bot, "to", command] ->
         if Slack.BotRegistry.lookup({other_bot, Slack.Bot.Supervisor}) do

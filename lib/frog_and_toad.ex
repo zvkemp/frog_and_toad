@@ -8,6 +8,7 @@ defmodule FrogAndToad do
 
     children = [
       worker(FrogAndToad.Stories.Sample, [], name: FrogAndToad.Stories.Sample),
+      worker(FrogAndToad.ResponseGate, []),
       # Start the endpoint when the application starts
       supervisor(FrogAndToad.Endpoint, []),
       # Here you could define other workers and supervisors as children
