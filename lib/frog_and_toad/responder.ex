@@ -76,7 +76,9 @@ defmodule FrogAndToad.Responder do
         "_[chuckles quietly]_",
         "BWA-HAHAHAHAHA!",
         "_[groans]_",
-        "_[nods along]_"
+        "_[nods along]_",
+        "hmph",
+        "Don't quit your day job, I guess"
       ])
       say(name, response, c)
     end
