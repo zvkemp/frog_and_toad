@@ -62,8 +62,21 @@ defmodule FrogAndToad.Responder do
 
   defp cancel_pending_reminders(name, %{"text" => t, "channel" => c, "user" => u, "ts" => ts} = msg, _config) do
     if FrogAndToad.ResponseGate.go?("cancel_pending", t, c, ts, u) do
-      if pid = Process.whereis(reminder_key(u, c)), do: Process.exit(pid, :shutdown)
-      say(name, "HAHAHAHA! Good one", c)
+      if pid = Process.whereis(reminder_key(u, c)) do
+        Process.exit(pid, :shutdown)
+        response = Enum.random([
+          "HAHAHAHA! Good one",
+          "lol",
+          "HA!",
+          "LOL",
+          "hah",
+          "_[chuckles quietly]_",
+          "BWA-HAHAHAHAHA!",
+          "_[groans]_",
+          "_[nods along]_"
+        ])
+        say(name, response, c)
+      end
     end
   end
 
