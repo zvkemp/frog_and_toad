@@ -21,7 +21,7 @@ defmodule FrogAndToad.ResponseGate do
     new_state = state
                 |> Enum.filter(fn {_, v} -> v + @ttl < ts end)
                 |> Enum.into(%{})
-                |> Map.put_new(key, ts) |> IO.inspect
+                |> Map.put_new(key, ts)
     {:reply, answer, new_state}
   end
 end
