@@ -47,12 +47,11 @@ defmodule FrogAndToad.Responder do
         "Q:" <> q = t
 
         {:ok, pid} = Task.start fn ->
-          #:timer.sleep(60_000 * 3)
           :timer.sleep(60_000)
           say(name, "...", c)
-          :timer.sleep(60_000)
+          :timer.sleep(60_000 * 5)
           say(name, "...", c)
-          :timer.sleep(60_000)
+          :timer.sleep(60_000 * 2)
           say(name, "<@#{u}> We're still waiting for an answer! #{q}", c)
         end
 
