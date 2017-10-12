@@ -5,9 +5,9 @@ defmodule FrogAndToad.ApiController do
     json(conn, %{})
   end
 
-  def create(conn, %{"bot" => bot, "channel" => channel, "message" => message, "token" => token}) do
+  def create(conn, %{"bot" => bot, "workspace" => workspace, "channel" => channel, "message" => message, "token" => token}) do
     if token == auth_token() do
-      r = Slack.Bot.say_to_named_channel(bot, message, channel)
+      r = Slack.Bot.say_to_named_channel({workspace, bot}, message, channel)
       json(conn, %{status: r})
     else
       conn

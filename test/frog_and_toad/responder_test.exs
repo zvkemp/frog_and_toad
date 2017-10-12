@@ -22,44 +22,45 @@ defmodule FrogAndToad.ResponderTest do
 
   setup do
     channel_id = :crypto.strong_rand_bytes(9) |> Base.encode64
+    ws = "workspace-a"
 
     # TODO: make this better
     ~w(frogbot toadbot owlbot)
     |> Enum.each(fn name ->
-      pid = GenServer.call(Slack.BotRegistry.registry_key(name, Slack.Bot.Socket) , :socket_pid)
-      Slack.Console.PubSub.subscribe(channel_id, pid, "user/#{name}")
+      pid = GenServer.call(Slack.BotRegistry.registry_key({ws, name}, Slack.Bot.Socket) , :socket_pid)
+      Slack.Console.PubSub.subscribe(ws, channel_id, pid, "user/#{name}")
     end)
 
-    Slack.Console.PubSub.subscribe(channel_id, spawn_forwarder(), "exunit")
-    {:ok, %{channel: channel_id}}
+    Slack.Console.PubSub.subscribe(ws, channel_id, spawn_forwarder(), "exunit")
+    {:ok, %{workspace: ws, channel: channel_id}}
   end
 
-  test "bots can respond to other bots", %{channel: c} do
+  test "bots can respond to other bots", %{workspace: ws, channel: c} do
     msg = "hoot hoot hey frogbot"
-    Slack.Bot.say("owlbot", msg, c)
+    Slack.Bot.say({ws, "owlbot"}, msg, c)
     assert_receive(%{"text" => ^msg, "user" => "user/owlbot"}, 200)
     assert_receive(%{"text" => "ribbit", "user" => "user/frogbot"}, 200)
   end
 
-  test "storytime, with a story in progress", %{channel: c} do
-    Slack.Console.say({c, "owlbot tell a joke"})
+  test "storytime, with a story in progress", %{workspace: ws, channel: c} do
+    Slack.Console.say({ws, c, "owlbot tell a joke"})
     :timer.sleep(50) # hmmm, this probably means we need a better mutex strategy
-    Slack.Console.say({c, "toadbot storytime!"})
+    Slack.Console.say({ws, c, "toadbot storytime!"})
     assert_receive(%{"text" => "<@console user> _*SHHHH!*_ We are already telling you a story."}, 500)
   end
 
-  test "storytime, with halting", %{channel: c} do
-    Slack.Console.say({c, "owlbot tell a joke"})
+  test "storytime, with halting", %{workspace: ws, channel: c} do
+    Slack.Console.say({ws, c, "owlbot tell a joke"})
     :timer.sleep(50)
-    assert FrogAndToad.Responder.channel_has_story?(c)
-    Slack.Console.say({c, "owlbot I am bored"})
+    assert FrogAndToad.Responder.channel_has_story?({ws, c})
+    Slack.Console.say({ws, c, "owlbot I am bored"})
     assert_receive(%{"text" => "Drat" <> _bin}, 200)
     :timer.sleep(50)
-    refute FrogAndToad.Responder.channel_has_story?(c)
+    refute FrogAndToad.Responder.channel_has_story?({ws, c})
   end
 
-  test "echoes are echoey", %{channel: c} do
-    Slack.Console.say({c, "owlbot tell frogbot to echo toadbot tell owlbot to echo toadbot tell frogbot to echo owlbot echo hey"})
+  test "echoes are echoey", %{workspace: ws, channel: c} do
+    Slack.Console.say({ws, c, "owlbot tell frogbot to echo toadbot tell owlbot to echo toadbot tell frogbot to echo owlbot echo hey"})
 
     assert_receive(%{"user" => "user/owlbot", "text" => "_[whispers to frogbot]_"}, 200)
     assert_receive(%{"user" => "user/frogbot", "text" => "toadbot tell owlbot to echo toadbot tell frogbot to echo owlbot echo hey"}, 200)
@@ -69,8 +70,8 @@ defmodule FrogAndToad.ResponderTest do
     assert_receive(%{"user" => "user/owlbot", "text" => "hey"}, 200)
   end
 
-  test "echoes are limited-2", %{channel: c} do
-    Slack.Console.say({c, "owlbot tell frogbot to echo toadbot echo frogbot echo toadbot tell owlbot to echo toadbot tell frogbot to echo owlbot echo hey"})
+  test "echoes are limited-2", %{workspace: ws, channel: c} do
+    Slack.Console.say({ws, c, "owlbot tell frogbot to echo toadbot echo frogbot echo toadbot tell owlbot to echo toadbot tell frogbot to echo owlbot echo hey"})
     assert_receive(%{"text" => "Drat these echos!", "user" => "user/frogbot"}, 500)
   end
 end
