@@ -21,6 +21,10 @@ defmodule FrogAndToad.Stories.Sample do
     GenServer.call(__MODULE__, {:random, story_collection, channel})
   end
 
+  def by_name(story_collection, channel, name) do
+    GenServer.call(__MODULE__, {:by_name, story_collection, channel, name})
+  end
+
   def handle_call({:random, story_type, channel}, _from, state) do
     base_list = apply(FrogAndToad.Stories, story_type, []) |> Enum.zip(Stream.repeatedly(&:rand.normal/0)) |> Enum.into(%{})
     now = timestamp()
@@ -40,6 +44,17 @@ defmodule FrogAndToad.Stories.Sample do
     {story, _} = Map.merge(base_list, delta_t) |> Enum.min_by(fn {_, weight} -> weight end)
     key = {story_type, story}
     {:reply, story, Map.update(state, channel, %{key => now}, fn chmap -> Map.put(chmap, key, now) end)}
+  end
+
+  def handle_call({:by_name, story_type, channel, name}, _from, state) do
+    story = apply(FrogAndToad.Stories, story_type, []) |> Enum.find(&("#{&1}" == name))
+    key   = {story_type, story}
+    now   = timestamp()
+    if story do
+      {:reply, story, Map.update(state, channel, %{key => now}, fn chmap -> Map.put(chmap, key, now) end)}
+    else
+      {:reply, :no_story, state}
+    end
   end
 
   defp timestamp, do: System.monotonic_time(:second)

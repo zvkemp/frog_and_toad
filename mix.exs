@@ -21,7 +21,7 @@ defmodule FrogAndToad.Mixfile do
   end
 
   # Specifies which paths to compile per environment.
-  defp elixirc_paths(:test), do: ["lib", "web", "test/support"]
+  defp elixirc_paths(:test), do: ["lib", "web", "test/support", "deps/slack/test/support"]
   defp elixirc_paths(_),     do: ["lib", "web"]
 
   # Specifies your project dependencies.
@@ -31,8 +31,7 @@ defmodule FrogAndToad.Mixfile do
     [{:phoenix, "~> 1.3"},
      {:gettext, "~> 0.9"},
      {:cowboy, "~> 1.0"},
-     {:slack, github: "zvkemp/elixir-bot-server", ref: "0.7.1"},
-     #{:slack, path: "../elixir-bot-server"},
+     {:slack, github: "zvkemp/elixir-bot-server", ref: "0.7.2"},
      {:credo, "~> 0.8", only: [:dev]},
      {:mix_test_watch, "~> 0.2", only: :dev},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}]

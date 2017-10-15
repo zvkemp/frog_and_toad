@@ -5,8 +5,8 @@ defmodule FrogAndToad.Responder do
 
   require Logger
 
-  @spec respond(Bot.bot_name, map, %C{}) :: any
-  def respond({ws, uname} = bot, %{"text" => t, "channel" => c} = msg, %C{id: uid, keywords: k} = config) do
+  @spec respond(Bot.bot_name, map, C.t) :: any
+  def respond({_, uname} = bot, %{"text" => t, "channel" => c} = msg, %C{id: uid, keywords: k} = config) do
     try do
       cond do
         String.contains?(t, [uname, "<@#{uid}>"]) ->
@@ -42,7 +42,7 @@ defmodule FrogAndToad.Responder do
   defp someone_finishing_a_joke?("A:" <> _), do: true
   defp someone_finishing_a_joke?(_), do: false
 
-  defp wait_for_joke_response({ws, _} = bot, %{"text" => t, "channel" => c, "user" => u, "ts" => ts} = msg, _config) do
+  defp wait_for_joke_response({ws, _} = bot, %{"text" => t, "channel" => c, "user" => u, "ts" => ts}, _config) do
     if FrogAndToad.ResponseGate.go?("response_gate", t, {ws, c}, ts, u) do
       rkey = reminder_key(u, ws, c)
 
@@ -67,7 +67,7 @@ defmodule FrogAndToad.Responder do
     :"reminder:#{workspace}:#{user}:#{channel}"
   end
 
-  defp cancel_pending_reminders({ws, _} = bot, %{"text" => t, "channel" => c, "user" => u, "ts" => ts} = msg, _config) do
+  defp cancel_pending_reminders({ws, _} = bot, %{"text" => t, "channel" => c, "user" => u, "ts" => ts}, _config) do
     if FrogAndToad.ResponseGate.go?("cancel_pending", t, {ws, c}, ts, u) do
       Logger.debug({:cancel_pending_reminders, t, ws, c, ts, u} |> inspect)
       if pid = Process.whereis(reminder_key(u, ws, c)), do: Process.exit(pid, :shutdown)
@@ -123,6 +123,10 @@ defmodule FrogAndToad.Responder do
     storytime(c, :story, bot, user)
   end
 
+  defp parse_command("storytime: " <> story_name, bot, %{"channel" => c, "user" => user}, _config) do
+    storytime(c, {:story, story_name}, bot, user)
+  end
+
   # start a joke sequence
   defp parse_command("tell a joke" <> _t, {_, "owlbot"} = bot, %{"channel" => c, "user" => user}, _config) do
     storytime(c, :joke, bot, user)
@@ -144,7 +148,7 @@ defmodule FrogAndToad.Responder do
     end
   end
 
-  defp parse_command("echo " <> t, bot, %{"channel" => c}, %{id: uid} = config) do
+  defp parse_command("echo " <> t, bot, %{"channel" => c}, _config) do
     if ~r/echo/ |> Regex.scan(t) |> Enum.count > 3 do
       say(bot, "Drat these echos!", c)
     else
@@ -152,7 +156,7 @@ defmodule FrogAndToad.Responder do
     end
   end
 
-  defp parse_command("mention me in a minute" <> t, bot, %{"user" => u, "channel" => c}, %{id: uid} = config) do
+  defp parse_command("mention me in a minute" <> _, bot, %{"user" => u, "channel" => c}, _config) do
     say(bot, "sure thing boss", c)
     Task.start(fn ->
       :timer.sleep(10_000)
@@ -179,7 +183,7 @@ defmodule FrogAndToad.Responder do
     say(bot, config.ribbit_msg, c)
   end
 
-  @spec storytime(String.t, :joke | :story, Bot.bot_name, String.t) :: :ok
+  @spec storytime(String.t, (:joke | :story) | {atom, String.t}, Bot.bot_name, String.t) :: :ok
   defp storytime(channel, story_type, {workspace, _} = bot, user) do
     case start_monitored_story(workspace, channel, story_type) do
       {:ok, _} -> :ok
@@ -190,12 +194,18 @@ defmodule FrogAndToad.Responder do
   @spec start_monitored_story(String.t, String.t, :joke | :story) :: {:ok, pid} | {:error, :already_started} | {:error}
   defp start_monitored_story(workspace, channel, story_type) do
     ch_ref = {workspace, channel}
+
+    {story_type, args} = case story_type do
+      {type, name} -> {type, [ch_ref, name]}
+      type -> {type, [ch_ref]}
+    end
+
     if channel_has_story?(ch_ref) do
       {:error, :already_started}
     else
       {:ok, pid} = Task.start(fn ->
         FrogAndToad.Stories
-        |> apply(story_type, [ch_ref])
+        |> apply(story_type, args)
         |> Enum.each(fn (line) -> storyline(line, workspace, channel) end)
       end)
 

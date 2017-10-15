@@ -14,6 +14,12 @@ defmodule FrogAndToad.Stories do
     do_story(name)
   end
 
+  def story(channel, name) do
+    Logger.warn("by name: #{name}")
+    name = Sample.by_name(:stories, channel, name)
+    do_story(name)
+  end
+
   def joke(channel) do
     name = Sample.random(:jokes, channel)
     do_story(name)
@@ -21,6 +27,12 @@ defmodule FrogAndToad.Stories do
 
   def do_story(name) do
     apply(__MODULE__, name, [])
+  end
+
+  def no_story do
+    [
+      [:frogbot, "Hmm, we don't know that one"]
+    ]
   end
 
   def interrupting_owl do

@@ -11,7 +11,7 @@ config :logger, level: :debug
 
 config :slack,
   use_console: true,
-  print_to_console: true,
+  #print_to_console: true,
   story_sleep: 100,
   bots: [
     %{name: "toadbot",
