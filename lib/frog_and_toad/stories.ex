@@ -223,7 +223,7 @@ defmodule FrogAndToad.Stories do
       [:toadbot, narrate("slices off frogbot's sword hand")],
       [:frogbot, "Hey! That will take days to grow back."],
       [:toadbot, "There is no escape. Don't make me destroy you."],
-      [:toadbot, "You do not yet realize your importance. You have only begun to discover you power."],
+      [:toadbot, "You do not yet realize your importance. You have only begun to discover your power."],
       [:toadbot, "Join me and I will complete your training."],
       [:toadbot, "With our combined strength, we can end this destructive conflict and bring order to the pond."],
       [:frogbot, "I'll never join you!"],
