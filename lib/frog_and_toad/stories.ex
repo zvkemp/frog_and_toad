@@ -89,11 +89,14 @@ defmodule FrogAndToad.Stories do
   def gone_with_the_wind do
     [
       [:frogbot, " Oh, toadbot, toadbot please don't say that. I'm so sorry, I'm so sorry for everything. "],
-      [:toadbot, " My darling, you're such a child. You think that by saying, I'm sorry, all the past can be corrected. Here, take my handkerchief. Never, at any crisis of your life, have I known you to have a handkerchief. "],
+      [:toadbot, " My darling, you're such a child. You think that by saying, I'm sorry, all the past can be corrected."],
+      [:toadbot, " Here, take my handkerchief. Never, at any crisis of your life, have I known you to have a handkerchief. "],
       [:frogbot, " toadbot! toadbot, where are you going? "],
       [:toadbot, " I'm going back to Charleston, back where I belong. "],
       [:frogbot, " Please, please take me with you! "],
-      [:toadbot, " No, I'm through with everything here. I want peace. I want to see if somewhere there isn't something left in life of charm and grace. Do you know what I'm talking about? "],
+      [:toadbot, " No, I'm through with everything here. I want peace."],
+      [:toadbot, " I want to see if somewhere there isn't something left in life of charm and grace."],
+      [:toadbot, " Do you know what I'm talking about? "],
       [:frogbot, " No, I only know that I love you. "],
       [:toadbot, " That's your misfortune. "],
       [:frogbot, " Oh, toadbot toadbot toadbot, toadbot...toadbot if you go, where shall I go, what shall I do? "],
