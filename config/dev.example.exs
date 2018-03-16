@@ -13,5 +13,24 @@ config :slack,
       keywords: %{ "cricket" => "WHERE ARE CRICKETS?" },
       socket_client: Slack.Console.Socket,
       api_client: Slack.Console.APIClient,
+      workspace: "console-workspace"
+    },
+    %{name:    "toadbot",
+      token:   "api-token-goes-here",
+      ribbit_msg: "croak",
+      responder: FrogAndToad.Responder,
+      keywords: %{ "cricket" => "WHERE ARE CRICKETS?" },
+      socket_client: Slack.Console.Socket,
+      api_client: Slack.Console.APIClient,
+      workspace: "console-workspace"
+    },
+    %{name:    "owlbot",
+      token:   "api-token-goes-here",
+      ribbit_msg: "hoot",
+      responder: FrogAndToad.Responder,
+      keywords: %{ "cricket" => "WHERE ARE CRICKETS?" },
+      socket_client: Slack.Console.Socket,
+      api_client: Slack.Console.APIClient,
+      workspace: "console-workspace"
     }
   ]

@@ -110,12 +110,29 @@ defmodule FrogAndToad.Responder do
         |> String.trim, bot, msg, config
       )
     else
-      say(bot, config.ribbit_msg, msg["channel"])
+      if :rand.uniform > 0.3, do:
+        say(bot, config.ribbit_msg, msg["channel"])
     end
   end
 
   defp parse_command("error" <> t, _, _msg, _config) do
     raise t
+  end
+
+  defp parse_command("help" <> _t, bot, %{"channel" => c, "user" => user}, _config) do
+    storytime(c, :help, bot, user)
+  end
+
+  defp parse_command("what else do you know" <> _t, {ws, _} = bot, %{"channel" => c, "user" => user}, _config) do
+    if pid = channel_has_story?({ws, c}) do
+      Process.exit(pid, :shutdown)
+    end
+
+    say(bot,
+        FrogAndToad.Stories.stories
+        |> Enum.map(&"frogbot storytime #{&1}")
+        |> Enum.join("\n"),
+        c)
   end
 
   # start a story sequence
@@ -124,6 +141,10 @@ defmodule FrogAndToad.Responder do
   end
 
   defp parse_command("storytime: " <> story_name, bot, %{"channel" => c, "user" => user}, _config) do
+    storytime(c, {:story, story_name}, bot, user)
+  end
+
+  defp parse_command("storytime " <> story_name, bot, %{"channel" => c, "user" => user}, _config) do
     storytime(c, {:story, story_name}, bot, user)
   end
 
@@ -180,10 +201,11 @@ defmodule FrogAndToad.Responder do
 
   # default, user was mentioned but no command matched.
   defp parse_command(_t, bot, %{"channel" => c}, config) do
-    say(bot, config.ribbit_msg, c)
+    if :rand.uniform > 0.3, do:
+      say(bot, config.ribbit_msg, c)
   end
 
-  @spec storytime(String.t, (:joke | :story) | {atom, String.t}, Bot.bot_name, String.t) :: :ok
+  @spec storytime(String.t, (:joke | :story | :help) | {atom, String.t}, Bot.bot_name, String.t) :: :ok
   defp storytime(channel, story_type, {workspace, _} = bot, user) do
     case start_monitored_story(workspace, channel, story_type) do
       {:ok, _} -> :ok

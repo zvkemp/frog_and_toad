@@ -4,9 +4,12 @@ defmodule FrogAndToad.Stories do
 
   @stories [:hal, :giant, :potter, :empire, :gone_with_the_wind, :housework]
   @jokes [:to_whom, :logicians, :bug_joke, :toad_joke, :interrupting_owl]
+  @helps [:main_help]
 
   def stories, do: @stories
   def jokes, do: @jokes
+  def helps, do: @helps
+
   require Logger
 
   def story(channel) do
@@ -18,6 +21,10 @@ defmodule FrogAndToad.Stories do
     Logger.warn("by name: #{name}")
     name = Sample.by_name(:stories, channel, name)
     do_story(name)
+  end
+
+  def help(_channel) do
+    do_story(:main_help)
   end
 
   def joke(channel) do
@@ -269,7 +276,7 @@ defmodule FrogAndToad.Stories do
       [:toadbot, narrate("takes out an umbrella and points it at the empty fire. Poof, poof! Two sparks fly out and the fire starts. The channel gapes.")],
       [:frogbot, narrate("puts cake down")],
       [:frogbot, "Excuse me, who are you?"],
-      [:toadbot, "Rubeus toadbot. Keeper of keys and grounds at Lumos. Course, you'll know all about Lumos."],
+      [:toadbot, "Rubeus toadbot. Keeper of keys and grounds at Wartwarts. Course, you'll know all about Wartwarts."],
       [:frogbot, "Sorry, no."],
       [:toadbot, "No? Blimey, frogbot, didn't you ever wonder where your mum and dad learned it all?"],
       [:frogbot, "Learnt what?"],
@@ -284,6 +291,37 @@ defmodule FrogAndToad.Stories do
       [:toadbot, "Well, 'Just frogbot', did you ever make anything happen? Anything you couldn't explain when you were angry or scared?"],
       [:frogbot, narrate("softens his expression")],
       [:toadbot, "Ah."]
+    ]
+  end
+
+  def main_help do
+    [
+      [:frogbot, """
+       Why hello!\n
+       I'm frogbot, and these are my colleagues, toadbot and owlbot.
+       """],
+      [:toadbot, "We're fictional!"],
+      [:frogbot, "Yes, aren't we all."],
+      [:owlbot, """
+       Here are a few of the things we can do!
+       ```
+       > frogbot storytime!
+
+       # [If a story is in progress, and you've heard it before:
+       > frogbot I am bored!
+
+       > frogbot what else do you know?
+       ```
+       """
+       ],
+
+       [:toadbot, """
+       > owlbot tell a joke!
+       """, 500],
+      [:toadbot, "You can also tell us a joke!"],
+      [:toadbot, narrate("[you]: Q: What's the bare minimum?")],
+      [:toadbot, narrate("[you]: A: one bear")],
+      [:frogbot, "Don't quit your day job, I guess"]
     ]
   end
 end
