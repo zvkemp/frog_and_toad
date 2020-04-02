@@ -39,7 +39,7 @@ defmodule FrogAndToad.MixProject do
       {:gettext, "~> 0.11"},
       {:jason, "~> 1.0"},
       {:plug_cowboy, "~> 2.0"},
-      {:scrabble_ex, path: "/solus/home/zach/labs/scrabble_ex"}, # FIXME
+      {:scrabble_ex, github: "zvkemp/scrabble_ex", ref: "master"},
       {:slack, github: "zvkemp/elixir-bot-server", ref: "master"},
       {:credo, "~> 1.0", only: [:dev]},
     ]

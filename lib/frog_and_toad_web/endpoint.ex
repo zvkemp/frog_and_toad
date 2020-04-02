@@ -11,7 +11,7 @@ defmodule FrogAndToadWeb.Endpoint do
   ]
 
   socket "/socket", ScrabbleExWeb.UserSocket,
-    websocket: true,
+    websocket: [timeout: 45_000], # avoid Heroku's timeout
     longpoll: false
 
   # Serve at "/" the static files from "priv/static" directory.

@@ -53,3 +53,19 @@ config :logger, level: :info
 # Finally import the config/prod.secret.exs which loads secrets
 # and configuration from environment variables.
 import_config "prod.secret.exs"
+
+config :scrabble_ex, ScrabbleExWeb.Endpoint,
+  # http: [port: 4000],
+  server: false,
+  debug_errors: true,
+  code_reloader: false,
+  watchers: [
+    node: [
+      "node_modules/webpack/bin/webpack.js",
+      "--mode",
+      "development",
+      "--watch-stdin",
+      cd: Path.expand("../assets", __DIR__)
+    ]
+  ]
+
