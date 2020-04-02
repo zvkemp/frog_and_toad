@@ -3,22 +3,31 @@
 #
 # This configuration file is loaded before any dependency and
 # is restricted to this project.
+
+# General application configuration
 use Mix.Config
 
 # Configures the endpoint
-config :frog_and_toad, FrogAndToad.Endpoint,
+config :frog_and_toad, FrogAndToadWeb.Endpoint,
   url: [host: "localhost"],
-  root: Path.dirname(__DIR__),
-  secret_key_base: "CrXHtbNuOaBv8pgSYtbU+llvEF7wR9ol6NI9GyBPGEkTs02eSb5ZIMS6G/a8DxGX",
-  render_errors: [accepts: ~w(json)],
-  pubsub: [name: FrogAndToad.PubSub,
-           adapter: Phoenix.PubSub.PG2]
+  secret_key_base: "ltinHRZyhlVBLCLTEFT06rWxowTUMm5dAPxk9MjY0PE0RDu+oNXB2hdx45+51UjP",
+  render_errors: [view: FrogAndToadWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: FrogAndToad.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "d44+OC1z"]
+
+config :scrabble_ex, ScrabbleExWeb.Endpoint,
+  url: [host: "localhost", path: "/scrabble"],
+  secret_key_base: "Cfan9jVmRCwMTUfOygrhMAIlXUUXAwcBRkmUIggYUETiq6Tb1O0hTNqJl3Qe0+hh",
+  render_errors: [view: ScrabbleExWeb.ErrorView, accepts: ~w(html json)],
+  pubsub: [name: ScrabbleEx.PubSub, adapter: Phoenix.PubSub.PG2],
+  live_view: [signing_salt: "Q5UT3WNP"]
 
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+# Use Jason for JSON parsing in Phoenix
 config :phoenix, :json_library, Jason
 
 defmodule FrogAndToad.ConfigHelper do
@@ -35,6 +44,7 @@ defmodule FrogAndToad.ConfigHelper do
     |> :erlang.binary_to_term
   end
 end
+
 # Import environment specific config. This must remain at the bottom
 # of this file so it overrides the configuration defined above.
-import_config "#{Mix.env}.exs"
+import_config "#{Mix.env()}.exs"

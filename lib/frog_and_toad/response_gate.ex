@@ -3,6 +3,8 @@ defmodule FrogAndToad.ResponseGate do
 
   @ttl 120 # seconds
 
+  def start_link([]), do: start_link()
+
   def start_link() do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end

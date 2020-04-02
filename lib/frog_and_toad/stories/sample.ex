@@ -8,6 +8,10 @@ defmodule FrogAndToad.Stories.Sample do
   # Enum.random
   use GenServer
 
+  def start_link([]) do
+    start_link
+  end
+
   def start_link do
     GenServer.start_link(__MODULE__, :ok, name: __MODULE__)
   end
