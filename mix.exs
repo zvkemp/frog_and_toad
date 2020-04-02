@@ -30,10 +30,12 @@ defmodule FrogAndToad.Mixfile do
   defp deps do
     [{:phoenix, "~> 1.3"},
      {:gettext, "~> 0.9"},
-     {:cowboy, "~> 1.0"},
-     {:slack, github: "zvkemp/elixir-bot-server", ref: "0.7.2"},
-     {:credo, "~> 0.10.2", only: [:dev]},
+     {:plug_cowboy, "~> 2.0"},
+     {:plug, "~> 1.7"},
+     {:slack, github: "zvkemp/elixir-bot-server", ref: "master"},
+     {:credo, "~> 1.0", only: [:dev]},
      {:mix_test_watch, "~> 0.2", only: :dev},
+     {:jason, "~> 1.2"},
      {:dialyxir, "~> 0.5", only: [:dev], runtime: false}]
   end
 end

@@ -19,6 +19,8 @@ config :logger, :console,
   format: "$time $metadata[$level] $message\n",
   metadata: [:request_id]
 
+config :phoenix, :json_library, Jason
+
 defmodule FrogAndToad.ConfigHelper do
   # Store production bot configs in a single BOT_CONFIGS env var (for heroku, et al)
   def dump_to_env(bot_conf) do

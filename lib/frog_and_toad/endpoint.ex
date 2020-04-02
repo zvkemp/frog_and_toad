@@ -1,7 +1,8 @@
 defmodule FrogAndToad.Endpoint do
   use Phoenix.Endpoint, otp_app: :frog_and_toad
 
-  socket "/socket", FrogAndToad.UserSocket
+  socket "/socket", FrogAndToad.UserSocket,
+    websocket: true
 
   # Serve at "/" the static files from "priv/static" directory.
   #
