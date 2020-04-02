@@ -123,7 +123,7 @@ defmodule FrogAndToad.Responder do
     storytime(c, :help, bot, user)
   end
 
-  defp parse_command("what else do you know" <> _t, {ws, _} = bot, %{"channel" => c, "user" => user}, _config) do
+  defp parse_command("what else do you know" <> _t, {ws, _} = bot, %{"channel" => c, "user" => _user}, _config) do
     if pid = channel_has_story?({ws, c}) do
       Process.exit(pid, :shutdown)
     end
@@ -268,7 +268,7 @@ defmodule FrogAndToad.Responder do
   end
 
 
-  defp try_command("echo" = cmd, {_ws, name} = bot, %{"text" => t, "user" => user, "channel" => c}, %{id: uid, ribbit_msg: r}) do
+  defp try_command("echo" = cmd, {_ws, name} = bot, %{"text" => t, "user" => _, "channel" => c}, %{id: uid, ribbit_msg: _}) do
     mention = "<@#{uid}>"
     if String.starts_with?(t, "#{name} #{cmd} ") || String.starts_with?(t, "#{mention} #{cmd} "), do:
     bot |> say(t |> String.split(" #{cmd} ", parts: 2) |> Enum.at(1), c)

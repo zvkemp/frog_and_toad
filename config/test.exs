@@ -2,12 +2,12 @@ use Mix.Config
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :frog_and_toad, FrogAndToad.Endpoint,
-  http: [port: 4001],
+config :frog_and_toad, FrogAndToadWeb.Endpoint,
+  http: [port: 4002],
   server: false
 
 # Print only warnings and errors during test
-config :logger, level: :debug
+config :logger, level: :warn
 
 config :slack,
   use_console: true,
